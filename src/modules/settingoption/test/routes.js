@@ -16,7 +16,17 @@ describe('Settingoption CRUD routes tests', function () {
 
     before(function (done) {
         mockup = {
-            name: 'name'
+            label: "Selling location(s)",
+            description: "This option lets you limit which countries you are willing to sell to.",
+            type: "select",
+            options: {
+                all: "Sell to all countries",
+                all_except: "Sell to all countries, except for&hellip;",
+                specific: "Sell to specific countries"
+            },
+            tip: "This option lets you limit which countries you are willing to sell to.",
+            value: "all",
+            group_id: "general"
         };
         credentials = {
             username: 'username',
@@ -32,18 +42,18 @@ describe('Settingoption CRUD routes tests', function () {
         done();
     });
 
-    it('should be Settingoption get use token', (done)=>{
+    it('should be Settingoption get use token', (done) => {
         request(app)
-        .get('/api/settingoptions')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(200)
-        .end((err, res)=>{
-            if (err) {
-                return done(err);
-            }
-            var resp = res.body;
-            done();
-        });
+            .get('/api/settingoptions')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                var resp = res.body;
+                done();
+            });
     });
 
     it('should be Settingoption get by id', function (done) {
@@ -68,14 +78,23 @@ describe('Settingoption CRUD routes tests', function () {
                         }
                         var resp = res.body;
                         assert.equal(resp.status, 200);
-                        assert.equal(resp.data.name, mockup.name);
+                        assert.equal(resp.data.label, mockup.label);
+                        assert.equal(resp.data.description, mockup.description);
+                        assert.equal(resp.data.type, mockup.type);
+                        assert.equal(resp.data.tip, mockup.tip);
+                        assert.equal(resp.data.value, mockup.value);
+                        assert.equal(resp.data.default, 'all');
+                        assert.equal(resp.data.group_id, mockup.group_id);
+                        assert.equal(resp.data.options.all, mockup.options.all)
+                        assert.equal(resp.data.options.all_except, mockup.options.all_except)
+                        assert.equal(resp.data.options.specific, mockup.options.specific)
                         done();
                     });
             });
 
     });
 
-    it('should be Settingoption post use token', (done)=>{
+    it('should be Settingoption post use token', (done) => {
         request(app)
             .post('/api/settingoptions')
             .set('Authorization', 'Bearer ' + token)
@@ -86,7 +105,17 @@ describe('Settingoption CRUD routes tests', function () {
                     return done(err);
                 }
                 var resp = res.body;
-                assert.equal(resp.data.name, mockup.name);
+                assert.equal(resp.status, 200);
+                assert.equal(resp.data.label, mockup.label);
+                assert.equal(resp.data.description, mockup.description);
+                assert.equal(resp.data.type, mockup.type);
+                assert.equal(resp.data.tip, mockup.tip);
+                assert.equal(resp.data.value, mockup.value);
+                assert.equal(resp.data.default, 'all');
+                assert.equal(resp.data.group_id, mockup.group_id);
+                assert.equal(resp.data.options.all, mockup.options.all)
+                assert.equal(resp.data.options.all_except, mockup.options.all_except)
+                assert.equal(resp.data.options.specific, mockup.options.specific)
                 done();
             });
     });
@@ -104,7 +133,7 @@ describe('Settingoption CRUD routes tests', function () {
                 }
                 var resp = res.body;
                 var update = {
-                    name: 'name update'
+                    label: 'name update'
                 }
                 request(app)
                     .put('/api/settingoptions/' + resp.data._id)
@@ -116,7 +145,17 @@ describe('Settingoption CRUD routes tests', function () {
                             return done(err);
                         }
                         var resp = res.body;
-                        assert.equal(resp.data.name, update.name);
+                        assert.equal(resp.status, 200);
+                        assert.equal(resp.data.label, update.label);
+                        assert.equal(resp.data.description, mockup.description);
+                        assert.equal(resp.data.type, mockup.type);
+                        assert.equal(resp.data.tip, mockup.tip);
+                        assert.equal(resp.data.value, mockup.value);
+                        assert.equal(resp.data.default, 'all');
+                        assert.equal(resp.data.group_id, mockup.group_id);
+                        assert.equal(resp.data.options.all, mockup.options.all)
+                        assert.equal(resp.data.options.all_except, mockup.options.all_except)
+                        assert.equal(resp.data.options.specific, mockup.options.specific)
                         done();
                     });
             });
@@ -144,15 +183,15 @@ describe('Settingoption CRUD routes tests', function () {
 
     });
 
-    it('should be settingoption get not use token', (done)=>{
+    it('should be settingoption get not use token', (done) => {
         request(app)
-        .get('/api/settingoptions')
-        .expect(403)
-        .expect({
-            status: 403,
-            message: 'User is not authorized'
-        })
-        .end(done);
+            .get('/api/settingoptions')
+            .expect(403)
+            .expect({
+                status: 403,
+                message: 'User is not authorized'
+            })
+            .end(done);
     });
 
     it('should be settingoption post not use token', function (done) {
